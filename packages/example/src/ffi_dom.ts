@@ -5,11 +5,11 @@ export function qs(selector: string) {
 export function update<Prop extends keyof HTMLElement>(
   element: HTMLElement,
   property: Prop,
-  updater: (v: HTMLElement[Prop]) => HTMLElement[Prop]
+  updater: (v: HTMLElement[Prop]) => HTMLElement[Prop],
 ) {
   element[property] = updater(element[property]);
 }
 
 export function onclick(element: HTMLElement, handler: () => void) {
-  element.addEventListener('click', handler);
+  element.addEventListener("click", handler);
 }

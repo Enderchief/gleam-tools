@@ -6,5 +6,13 @@ export default defineConfig({
     clean: true,
     target: 'es2022',
     format: ["esm"],
-    bundle: false,
+
+    bundle: true,
+    dts: {
+        resolve: true,
+        entry: "src/index.ts",
+        compilerOptions: {
+            moduleResolution: 'node'
+        }
+    }
 })

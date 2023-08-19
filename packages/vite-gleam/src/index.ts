@@ -1,50 +1,18 @@
-import { compile as c } from "../gleam.mjs";
-import { lstat, readFile, readdir } from "node:fs/promises";
-import { resolve, relative, join } from "node:path";
+import { lstat, readFile, readdir, rename } from "node:fs/promises";
 
 import type { Plugin } from "vite";
-import type { Options } from "../types";
+import { execSync } from "node:child_process";
+import { parse } from "toml";
+import { resolve, relative, join } from "node:path";
+import MagicString from "magic-string";
 
-async function compile(
-  path?: string,
-  dependencies?: string[],
-): Promise<{ Ok?: Map<string, string>; Err?: string }> {
-  const source = await readDeps();
-
-  if (path) {
-    const rel = "./" + relative(resolve("."), path);
-
-    const file = await readFile(path, { encoding: "utf8" });
-    const toml_path = "./gleam.toml";
-
-    const toml = await readFile(toml_path, {
-      encoding: "utf8",
-    });
-
-    source["/gleam.toml"] = toml;
-    source["/" + rel.slice(1)] = file;
-  }
-
-  const res: { Ok?: Map<string, string>; Err?: string } = await c({
-    target: "javascript",
-    mode: "Dev",
-    dependencies: dependencies ?? [],
-    sourceFiles: source,
-  });
-  if (res.Ok) {
-    const n = new Map();
-    res.Ok.forEach((v, k) => {
-      n.set(
-        k.replace(/\/build\/packages\/(.+)\/src/, "/build/dev/javascript/$1"),
-        v,
-      );
-    });
-    res.Ok = n;
-  }
-  return res;
+interface GleamConfig {
+  name: string;
+  version: string;
+  target: string;
 }
 
-let cached: Map<string, string> = null;
+let gleam_config: GleamConfig | undefined = undefined;
 
 export async function readDeps(BASE_PATH = "./build/packages") {
   let stat = await lstat(BASE_PATH);
@@ -66,53 +34,76 @@ async function makeDeps(path: string, o: Record<string, string> = {}) {
   return o;
 }
 
-export default async function gleamVite(options: Options) {
-  const res = (await compile(null, options.dependencies)).Ok;
-  if (res) cached = res;
+export async function build() {
+  if (!gleam_config) throw new Error("gleam.toml not found");
+  console.log("$ gleam build");
+  const out = execSync("gleam build", { encoding: "utf8" });
+  console.log(out);
 
+  const path = `./build/dev/javascript/${gleam_config?.name}`;
+  const all_ts = (await readdir(path)).map(async (v) => {
+    const stat = await lstat(v);
+    if (stat.isFile() && v.endsWith(".d.ts")) {
+      await rename(v, v.replace(".d.ts", ".gleam.d.ts"));
+    }
+  });
+  await Promise.allSettled(all_ts);
+}
+
+export function jsPath(id: string): string {
+  id = id.replace(".gleam", ".mjs");
+
+  let path = relative(resolve("."), id);
+  if (path.startsWith("src")) {
+    path = path.replace("src/", `${gleam_config?.name}/`);
+  }
+
+  return path;
+}
+
+export default async function gleamVite(): Promise<Plugin> {
   return {
     name: "gleam",
-    async load(id) {
-      if (id.startsWith("gleam:")) {
-        id = id.replace("gleam:", "");
-        const file = cached.get(id);
+    async buildStart() {
+      const toml_exist = await lstat("./gleam.toml");
+      if (!toml_exist.isFile()) throw Error("gleam.toml not found");
+      const file = await readFile("./gleam.toml", { encoding: "utf8" });
+      gleam_config = parse(file) as GleamConfig;
 
-        if (file) return { code: file };
-      }
+      await build();
+    },
+    async resolveId(source, importer) {
+      if (!importer || !importer.endsWith(".gleam")) return;
 
-      if (!id.endsWith(".gleam")) return;
+      importer = jsPath(importer);
 
-      const res = await compile(id, options.dependencies);
-
-      if (!res.Ok) return;
-
-      cached = res.Ok;
-
-      const filename = relative(resolve("."), id)
-        .replace(/src\/(.+)/, "$1")
-        .replace(".gleam", ".mjs");
-
-      const code = res.Ok.get(`/build/dev/javascript/gleam-wasm/${filename}`);
-
+      const path =
+        "./" + join("./build/dev/javascript/", importer, "..", source);
       return {
-        code,
+        id: path,
       };
     },
-    resolveId(source, importer) {
-      if (importer.endsWith(".gleam")) {
-        const start = resolve("./src");
+    async transform(code, id) {
+      if (!id.endsWith(".gleam")) return;
 
-        importer = importer.replace(start, "/build/dev/javascript/gleam-wasm");
+      const path = id.replace(".gleam", ".mjs");
 
-        const path = join(importer, "..", source);
+      const file = await readFile(`./build/dev/javascript/${jsPath(path)}`, {
+        encoding: "utf8",
+      });
 
-        return { id: `gleam:${path}` };
-      } else if (importer.startsWith("gleam:")) {
-        importer = importer.replace("gleam:", "");
+      const s = new MagicString(code);
+      s.overwrite(0, code.length - 1, file);
 
-        const path = join(importer, "..", source);
-        return { id: `gleam:${path}` };
-      }
+      const map = s.generateMap({ source: id, includeContent: true });
+
+      return {
+        code: file,
+        map: map,
+      };
+    },
+    async handleHotUpdate(ctx) {
+      if (ctx.file.endsWith(".gleam")) await build();
     },
   } satisfies Plugin;
 }

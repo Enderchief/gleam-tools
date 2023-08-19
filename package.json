@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "Import directly from *.gleam files",
   "scripts": {
-    "build:wasm": "cd external_gleam/compiler-wasm && wasm-pack build --target=nodejs --out-dir ../../packages/vite-gleam/gleam",
     "build:pkg": "pnpm -r --filter='./packages/vite-gleam' run build",
-    "build": "pnpm build:wasm && pnpm build:pkg",
+    "build": "pnpm build:pkg",
     "format": "prettier -w packages/*/src",
     "dev": "pnpm -r --filter='./packages/*' run dev",
-    "prepublish": "pnpm build"
+    "prepublish": "pnpm build",
+    "publish": "pnpm publish --filter='./packages/vite-gleam' --dry-run"
   },
   "keywords": [
     "gleam",

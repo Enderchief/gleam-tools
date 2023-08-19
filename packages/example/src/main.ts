@@ -1,9 +1,13 @@
-import './style.css';
-import gleamLogo from './gleam.svg';
-import viteLogo from '/vite.svg';
-import { setup_counter } from './counter.gleam';
+import "./style.css";
+import gleamLogo from "./gleam.svg";
+import viteLogo from "/vite.svg";
+import { setup_counter } from "./counter.gleam";
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+declare module "./counter.gleam" {
+  function setup_counter(btn: HTMLElement, counter: HTMLElement): null;
+}
+
+document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
     <a href="https://vitejs.dev" target="_blank">
       <img src="${viteLogo}" class="logo" alt="Vite logo" />
@@ -22,6 +26,6 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 `;
 
 setup_counter(
-  document.querySelector<HTMLButtonElement>('#counter')!,
-  document.querySelector<HTMLSpanElement>('#count')!
+  document.querySelector<HTMLButtonElement>("#counter")!,
+  document.querySelector<HTMLSpanElement>("#count")!,
 );
