@@ -8,7 +8,7 @@
     "format": "prettier -w packages/*/src",
     "dev": "pnpm -r --filter='./packages/*' run dev",
     "prepublish": "pnpm build",
-    "publish": "pnpm publish --filter='./packages/vite-gleam' --dry-run"
+    "publish": "pnpm publish --filter='./packages/vite-gleam'"
   },
   "keywords": [
     "gleam",
