@@ -1,0 +1,3 @@
+[submodule "external_gleam"]
+	path = external_gleam
+	url = https://github.com/gleam-lang/gleam.git

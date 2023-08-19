@@ -1,0 +1,23 @@
+{
+  "folders": [
+    {
+      "name": "✨ root",
+      "path": ".."
+    },
+    {
+      "name": "📦 example",
+      "path": "../packages/example"
+    },
+    {
+      "name": "📦 vite-gleam",
+      "path": "../packages/vite-gleam"
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "extensions": {
+    "recommendations": ["gleam.gleam"]
+  }
+}

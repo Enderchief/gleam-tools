@@ -1,0 +1,40 @@
+{
+  "name": "vite-gleam",
+  "version": "0.1.0",
+  "description": "Import directly from *.gleam files using Vite",
+  "repository": {
+    "url": "https://github.com/Enderchief/vite-gleam"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch src",
+    "format": "prettier -w src"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./types.d.ts",
+  "exports": {
+    "types": "./types.d.ts",
+    "default": "./dist/index.mjs"
+  },
+  "keywords": [
+    "gleam",
+    "vite",
+    "vite-plugin"
+  ],
+  "files": [
+    "dist",
+    "gleam",
+    "types.d.ts",
+    "gleam.mjs"
+  ],
+  "author": "Enderchief",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^3.0.2",
+    "tsup": "^7.2.0"
+  },
+  "dependencies": {
+    "vite": "^4.4.5"
+  }
+}
