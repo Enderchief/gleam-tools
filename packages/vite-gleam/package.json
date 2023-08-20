@@ -1,6 +1,6 @@
 {
   "name": "vite-gleam",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Import directly from *.gleam files using Vite",
   "repository": {
     "url": "https://github.com/Enderchief/vite-gleam"
