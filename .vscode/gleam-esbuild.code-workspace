@@ -16,6 +16,8 @@
   "settings": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "prettier.singleQuote": false,
+    "prettier.trailingComma": "all",
     "[gleam]": {
       "editor.defaultFormatter": "gleam.gleam"
     }
