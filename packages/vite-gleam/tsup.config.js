@@ -5,7 +5,7 @@ export default defineConfig({
 
     clean: true,
     target: 'es2022',
-    format: ["esm"],
+    format: ["esm", "cjs"],
 
     bundle: true,
     dts: {

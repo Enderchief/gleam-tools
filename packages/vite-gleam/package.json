@@ -1,6 +1,6 @@
 {
   "name": "vite-gleam",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Import directly from *.gleam files using Vite",
   "repository": {
     "url": "https://github.com/Enderchief/vite-gleam"
@@ -10,11 +10,13 @@
     "dev": "tsup --watch src",
     "format": "prettier -w src"
   },
+  "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "exports": {
     "types": "./dist/index.d.mts",
     "import": "./dist/index.mjs",
+    "require": "./dist/index.js",
     "default": "./dist/index.mjs"
   },
   "keywords": [
