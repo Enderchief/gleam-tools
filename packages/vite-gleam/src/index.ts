@@ -73,7 +73,17 @@ export default async function gleamVite(): Promise<Plugin> {
       await build();
     },
     async resolveId(source, importer) {
-      if (!importer || !importer.endsWith(".gleam")) return;
+      if (!importer) return;
+      else if (source.startsWith("hex:")) {
+        const path = join(
+          resolve("."),
+          "/build/dev/javascript",
+          source.slice(4),
+        );
+        return { id: path };
+      }
+
+      if (!importer.endsWith(".gleam")) return;
 
       importer = jsPath(importer);
 
