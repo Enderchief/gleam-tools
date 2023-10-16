@@ -1,9 +1,9 @@
-import { lstat, readFile, readdir, rename } from "node:fs/promises";
+import { lstat, readdir, readFile, rename } from "node:fs/promises";
 
 import type { Plugin } from "vite";
 import { execSync } from "node:child_process";
 import { parse } from "toml";
-import { resolve, relative, join } from "node:path";
+import { join, relative, resolve } from "node:path";
 import MagicString from "magic-string";
 
 interface GleamConfig {
@@ -64,6 +64,16 @@ export function jsPath(id: string): string {
 export default async function gleamVite(): Promise<Plugin> {
   return {
     name: "gleam",
+    config(config, env) {
+      config.build ||= {};
+      if (typeof config.build.watch !== "object") config.build.watch = {};
+      let origin = config.build.watch!.exclude;
+      if (!origin) origin = [];
+      else if (typeof origin !== "object") origin = [origin];
+
+      (<string[]> origin).push("build/**");
+      config.build.watch!.exclude = origin;
+    },
     async buildStart() {
       const toml_exist = await lstat("./gleam.toml");
       if (!toml_exist.isFile()) throw Error("gleam.toml not found");
