@@ -36,8 +36,8 @@ async function makeDeps(path: string, o: Record<string, string> = {}) {
 
 export async function build() {
   if (!gleam_config) throw new Error("gleam.toml not found");
-  console.log("$ gleam build");
-  const out = execSync("gleam build", { encoding: "utf8" });
+  console.log("$ gleam build --target=javascript");
+  const out = execSync("gleam build --target=javascript", { encoding: "utf8" });
   console.log(out);
 
   const path = `./build/dev/javascript/${gleam_config?.name}`;
@@ -71,7 +71,7 @@ export default async function gleamVite(): Promise<Plugin> {
       if (!origin) origin = [];
       else if (typeof origin !== "object") origin = [origin];
 
-      (<string[]> origin).push("build/**");
+      (<string[]>origin).push("build/**");
       config.build.watch!.exclude = origin;
     },
     async buildStart() {
