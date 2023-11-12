@@ -20,7 +20,7 @@
     "noFallthroughCasesInSwitch": true,
 
     "allowJs": true,
-    "rootDirs": ["./build/dev/javascript/example", "./src"],
+    "plugins": [{ "name": "ts-gleam" }],
     "allowArbitraryExtensions": true
   },
   "include": ["src"]

@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "description": "Import directly from *.gleam files using Vite",
   "repository": {
-    "url": "https://github.com/Enderchief/vite-gleam"
+    "url": "https://github.com/Enderchief/gleam-tools/tree/master/packages/vite-gleam"
   },
   "scripts": {
     "build": "tsup",

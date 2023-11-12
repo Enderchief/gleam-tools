@@ -1,38 +1,13 @@
-# vite-gleam [![npm](https://img.shields.io/npm/v/vite-gleam)](https://npmjs.com/package/vite-gleam)
+# Gleam JavaScript Tools
 
-Import from [Gleam](https://gleam.run/) (`*.gleam`) files directly.
+This is a monorepo for various related tools for Gleam with JavaScript.
 
-## Usage
+---
 
-1. `npm i vite-gleam`
-2. Create a basic Vite project (`npm create vite`)
-3. Create a `gleam.toml` and add Gleam dependencies
-4. Update your vite config
+## [vite-gleam](https://github.com/Enderchief/gleam-tools/tree/master/packages/vite-gleam) [![npm](https://img.shields.io/npm/v/vite-gleam)](https://npmjs.com/package/vite-gleam)
 
-```ts
-// vite.config.{ts,js}
-import gleam from 'vite-gleam';
+Vite plugin to import Gleam code from JavaScript.
 
-export default {
-  plugins: [gleam()],
-};
-```
+## [ts-gleam](https://github.com/Enderchief/gleam-tools/tree/master/packages/ts-gleam) [![npm](https://img.shields.io/npm/v/ts-gleam)](https://npmjs.com/package/ts-gleam)
 
-6. Start importing from Gleam!
-
-## Note
-
-By default, TypeScript (LSP) will complain about importing files with the `.gleam` extension. There are two choices for fixes:
-
-- If the type of the import doesnt matter , add `declare module "*.gleam";` inside any TypeScript file. A caveat is the LSP does not know if a export exists so it will not provide autocomplete when importing a Gleam file and it will type exports as `any`.
-- Alternatively, if the vite dev server is running you can have full type safety when importing from Gleam. Create a `*.jsconfig` (or `*.tsconfig` for TypeScript). Add the following JSON and run the dev server. Replace `PROJECT_NAME` with the name specified in `gleam.toml`.
-
-```json
-{
-  "compilerOptions": {
-    "allowJs": true,
-    "rootDirs": ["./build/dev/javascript/PROJECT_NAME", "./src"],
-    "allowArbitraryExtensions": true
-  }
-}
-```
+TypeScript LSP Plugin to provide type safety when importing Gleam code.

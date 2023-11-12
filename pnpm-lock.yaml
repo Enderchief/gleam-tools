@@ -10,6 +10,9 @@ importers:
 
   packages/example:
     devDependencies:
+      ts-gleam:
+        specifier: file:../ts-gleam
+        version: file:packages/ts-gleam
       typescript:
         specifier: ^5.0.2
         version: 5.0.2
@@ -23,15 +26,14 @@ importers:
         specifier: ^0.7.38
         version: 0.7.38(vite@4.4.5)
 
-  packages/gleam-vite:
+  packages/ts-gleam:
     dependencies:
-      vite:
-        specifier: ^4.4.5
-        version: 4.4.5
-    devDependencies:
-      tsup:
-        specifier: ^7.2.0
-        version: 7.2.0
+      '@iarna/toml':
+        specifier: ^2.2.5
+        version: 2.2.5
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
 
   packages/vite-gleam:
     dependencies:
@@ -236,6 +238,9 @@ packages:
     os: [win32]
     requiresBuild: true
     optional: true
+
+  /@iarna/toml@2.2.5:
+    resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
 
   /@jridgewell/gen-mapping@0.3.3:
     resolution: {integrity: sha512-HLhSWOLRi875zjjMG/r+Nv0oCW8umGb0BgEhyX3dDX3egwZtB8PqLnjz3yedt8R5StBrzcg4aBpnh8UA9D1BoQ==}
@@ -1110,6 +1115,11 @@ packages:
     hasBin: true
     dev: true
 
+  /typescript@5.2.2:
+    resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   /universalify@2.0.0:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
     engines: {node: '>= 10.0.0'}
@@ -1205,4 +1215,12 @@ packages:
   /yaml@2.3.1:
     resolution: {integrity: sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==}
     engines: {node: '>= 14'}
+    dev: true
+
+  file:packages/ts-gleam:
+    resolution: {directory: packages/ts-gleam, type: directory}
+    name: ts-gleam
+    dependencies:
+      '@iarna/toml': 2.2.5
+      typescript: 5.2.2
     dev: true

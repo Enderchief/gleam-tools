@@ -3,10 +3,6 @@ import gleamLogo from "./gleam.svg";
 import viteLogo from "/vite.svg";
 import { setup_counter } from "./counter.gleam";
 
-declare module "./counter.gleam" {
-  function setup_counter(btn: HTMLElement, counter: HTMLElement): null;
-}
-
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
     <a href="https://vitejs.dev" target="_blank">

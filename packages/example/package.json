@@ -13,6 +13,7 @@
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
     "vite-gleam": "link:../vite-gleam",
+    "ts-gleam": "file:../ts-gleam",
     "vite-plugin-inspect": "^0.7.38"
   }
 }

@@ -1,7 +1,10 @@
 {
   "name": "ts-gleam",
   "description": "get type safety when importing .gleam from javascript",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/Enderchief/gleam-tools/tree/master/packages/ts-gleam"
+  },
   "author": "Enderchief",
   "license": "MIT",
   "scripts": {

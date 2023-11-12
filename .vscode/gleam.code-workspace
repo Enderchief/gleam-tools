@@ -24,7 +24,8 @@
     "prettier.trailingComma": "all",
     "[gleam]": {
       "editor.defaultFormatter": "gleam.gleam"
-    }
+    },
+    "typescript.tsdk": "📦 example/node_modules/typescript/lib"
   },
   "extensions": {
     "recommendations": ["gleam.gleam"]
