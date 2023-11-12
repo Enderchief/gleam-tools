@@ -11,6 +11,10 @@
     {
       "name": "📦 vite-gleam",
       "path": "../packages/vite-gleam"
+    },
+    {
+      "name": "📦 ts-gleam",
+      "path": "../packages/ts-gleam"
     }
   ],
   "settings": {
