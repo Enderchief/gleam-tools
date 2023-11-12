@@ -1,4 +1,4 @@
-import { lstat, readdir, readFile, rename } from "node:fs/promises";
+import { lstat, readdir, readFile } from "node:fs/promises";
 
 import type { Plugin } from "vite";
 import { execSync } from "node:child_process";
@@ -39,15 +39,6 @@ export async function build() {
   console.log("$ gleam build --target=javascript");
   const out = execSync("gleam build --target=javascript", { encoding: "utf8" });
   console.log(out);
-
-  const path = `./build/dev/javascript/${gleam_config?.name}`;
-  const all_ts = (await readdir(path)).map(async (v) => {
-    const stat = await lstat(v);
-    if (stat.isFile() && v.endsWith(".d.ts")) {
-      await rename(v, v.replace(".d.ts", ".gleam.d.ts"));
-    }
-  });
-  await Promise.allSettled(all_ts);
 }
 
 export function jsPath(id: string): string {
