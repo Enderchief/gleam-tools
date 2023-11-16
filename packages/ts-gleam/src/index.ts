@@ -131,7 +131,9 @@ function init(modules: {
           return {
             extension: ts.Extension.Dts,
             isExternalLibraryImport: false,
-            resolvedFileName: p,
+            resolvedFileName: p
+              .replace("/src/", `/build/dev/javascript/${projectName}/`)
+              .replace(/\.gleam/, ".d.mts"),
           };
         }
       };
