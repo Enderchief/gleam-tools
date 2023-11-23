@@ -57,6 +57,8 @@ export default async function gleamVite(): Promise<Plugin> {
     name: "gleam",
     config(config, env) {
       config.build ||= {};
+      if (config.build.watch === null || config.build.watch === undefined)
+        return;
       if (typeof config.build.watch !== "object") config.build.watch = {};
       let origin = config.build.watch!.exclude;
       if (!origin) origin = [];
