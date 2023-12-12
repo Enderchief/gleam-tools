@@ -57,13 +57,14 @@ export default async function gleamVite(): Promise<Plugin> {
     name: "gleam",
     config(config, env) {
       config.build ||= {};
-      if (typeof config.build.watch !== "object") config.build.watch = {};
-      let origin = config.build.watch!.exclude;
-      if (!origin) origin = [];
-      else if (typeof origin !== "object") origin = [origin];
+      if (config.build.watch) {
+        let origin = config.build.watch!.exclude;
+        if (!origin) origin = [];
+        else if (typeof origin !== "object") origin = [origin];
 
-      (<string[]>origin).push("build/**");
-      config.build.watch!.exclude = origin;
+        (<string[]>origin).push("build/**");
+        config.build.watch!.exclude = origin;
+      }
     },
     async buildStart() {
       const toml_exist = await lstat("./gleam.toml");
