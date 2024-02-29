@@ -3,7 +3,7 @@ import { lstat, readdir, readFile } from "node:fs/promises";
 import type { Plugin } from "vite";
 import { execSync } from "node:child_process";
 import { parse } from "toml";
-import { join, relative, resolve } from "node:path";
+import { join, relative, resolve, sep } from "node:path";
 import MagicString from "magic-string";
 
 interface GleamConfig {
@@ -46,7 +46,7 @@ export function jsPath(id: string): string {
 
   let path = relative(resolve("."), id);
   if (path.startsWith("src")) {
-    path = path.replace("src/", `${gleam_config?.name}/`);
+    path = path.replace(`src${sep}`, `${gleam_config?.name}${sep}`);
   }
 
   return path;
