@@ -20,6 +20,15 @@ export async function readDeps(BASE_PATH = "./build/packages") {
   return makeDeps(BASE_PATH, {});
 }
 
+function slash(path: string): string {
+  const isExtendedLengthPath = /^\\\\\?\\/.test(path);
+  const hasNonAscii = /[^\u0000-\u0080]+/.test(path);
+  if (isExtendedLengthPath || hasNonAscii) {
+    return path;
+  }
+  return path.replace(/\\/g, "/");
+}
+
 async function makeDeps(path: string, o: Record<string, string> = {}) {
   const stat = await lstat(path);
   if (stat.isDirectory()) {
@@ -44,7 +53,7 @@ export async function build() {
 export function jsPath(id: string): string {
   id = id.replace(".gleam", ".mjs");
 
-  let path = relative(resolve("."), id);
+  let path = slash(relative(resolve("."), id));
   if (path.startsWith("src")) {
     path = path.replace(`src${sep}`, `${gleam_config?.name}${sep}`);
   }
