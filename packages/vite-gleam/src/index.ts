@@ -86,7 +86,7 @@ export default async function gleamVite(): Promise<Plugin> {
         return { id: path };
       }
 
-      if (!importer.endsWith(".gleam")) return;
+      if (!importer.endsWith(".gleam") && source != "./gleam.mjs") return;
 
       importer = jsPath(importer);
 
