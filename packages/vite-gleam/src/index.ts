@@ -14,7 +14,7 @@ interface GleamConfig {
 
 let gleam_config: GleamConfig | undefined = undefined;
 
-export async function readDeps(BASE_PATH = "./build/packages") {
+export async function readDeps(BASE_PATH = `.${sep}build${sep}packages`) {
   let stat = await lstat(BASE_PATH);
   if (!stat.isDirectory()) return;
   return makeDeps(BASE_PATH, {});
@@ -24,7 +24,9 @@ async function makeDeps(path: string, o: Record<string, string> = {}) {
   const stat = await lstat(path);
   if (stat.isDirectory()) {
     await Promise.allSettled(
-      (await readdir(path)).map(async (p) => await makeDeps(`${path}/${p}`, o)),
+      (await readdir(path)).map(
+        async (p) => await makeDeps(`${path}${sep}${p}`, o),
+      ),
     );
   } else if (stat.isFile()) {
     const f = await readFile(path, { encoding: "utf8" });
@@ -68,9 +70,9 @@ export default async function gleamVite(): Promise<Plugin> {
       config.build.watch!.exclude = origin;
     },
     async buildStart() {
-      const toml_exist = await lstat("./gleam.toml");
+      const toml_exist = await lstat(`.${sep}gleam.toml`);
       if (!toml_exist.isFile()) throw Error("gleam.toml not found");
-      const file = await readFile("./gleam.toml", { encoding: "utf8" });
+      const file = await readFile(`.${sep}gleam.toml`, { encoding: "utf8" });
       gleam_config = parse(file) as GleamConfig;
 
       await build();
@@ -80,13 +82,13 @@ export default async function gleamVite(): Promise<Plugin> {
       else if (source.startsWith("hex:")) {
         const path = join(
           resolve("."),
-          "/build/dev/javascript",
+          `${sep}build${sep}dev${sep}javascript`,
           source.slice(4),
         );
         return { id: path };
       }
 
-      if (!importer.endsWith(".gleam") && source != "./gleam.mjs") return;
+      if (!importer.endsWith(".gleam") && !source.endsWith("gleam.mjs")) return;
 
       importer = jsPath(importer);
 
@@ -106,9 +108,12 @@ export default async function gleamVite(): Promise<Plugin> {
 
       const path = id.replace(".gleam", ".mjs");
 
-      const file = await readFile(`./build/dev/javascript/${jsPath(path)}`, {
-        encoding: "utf8",
-      });
+      const file = await readFile(
+        `.${sep}build${sep}dev${sep}javascript${sep}${jsPath(path)}`,
+        {
+          encoding: "utf8",
+        },
+      );
 
       const s = new MagicString(code);
       s.overwrite(0, code.length - 1, file);
