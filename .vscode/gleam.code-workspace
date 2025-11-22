@@ -21,6 +21,8 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "prettier.singleQuote": false,
+    "prettier.tabWidth": 2,
+    "prettier.useTabs": false,
     "prettier.trailingComma": "all",
     "[gleam]": {
       "editor.defaultFormatter": "gleam.gleam"

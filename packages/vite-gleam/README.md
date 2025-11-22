@@ -2,6 +2,8 @@
 
 Import from [Gleam](https://gleam.run/) (`*.gleam`) files directly.
 
+Given the version number X.Y.Z, X refers to a breaking change, Y refers to the Vite version, and Z refers to a minor change.
+
 ## Usage
 
 1. `npm i vite-gleam`
@@ -25,4 +27,4 @@ export default {
 By default, TypeScript (LSP) will complain about importing files with the `.gleam` extension. There are two choices for fixes:
 
 - If the type of the import doesn't matter , add `declare module "*.gleam";` inside any TypeScript file. A caveat is the LSP does not know if an export exists so it will not provide autocompletion when importing a Gleam file and it will type exports as `any`.
-- Alternatively, if the vite dev server is running you can have full type safety when importing from Gleam. `npm i ts-gleam`. Create a `tsconfig.json`/`jsconfig.json` and set `compilerOptions.plugins` to `[{"name": "ts-gleam"}]` (**RECOMMENDED**)
+- Alternatively, if the vite dev server is running you can have full type safety when importing from Gleam. `npm i ts-gleam`. Create a `tsconfig.json`/`jsconfig.json` and set `compilerOptions.plugins` to `[{"name": "ts-gleam"}]`
