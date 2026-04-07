@@ -4,6 +4,20 @@ import { JsonArray, JsonMap, parse } from "@iarna/toml";
 import type tsModule from "typescript/lib/tsserverlibrary.js";
 
 const GLEAM_REGEX = /\.gleam/;
+const GLEAM_SOURCE_DIRS = ["src", "dev", "test"] as const;
+
+function replaceGleamSourceRoot(fileName: string, projectName: string) {
+  const sourceDir = GLEAM_SOURCE_DIRS.find(
+    (dir) => fileName === dir || fileName.includes(`/${dir}/`) || fileName.startsWith(`${dir}/`),
+  );
+
+  if (!sourceDir) return fileName;
+
+  return fileName.replace(
+    new RegExp(`(^|/)${sourceDir}(?=/|$)`),
+    `$1build/dev/javascript/${projectName}`,
+  );
+}
 
 function _isGleam(fileName: string): boolean {
   return GLEAM_REGEX.test(fileName);
@@ -14,9 +28,10 @@ function _hasDeclaration(
   projectName: string,
   logger: tsModule.server.Logger,
 ) {
-  const _filepath = fileName
-    .replace("/src/", `/build/dev/javascript/${projectName}/`)
-    .replace(/\.gleam/, ".d.mts");
+  const _filepath = replaceGleamSourceRoot(fileName, projectName).replace(
+    /\.gleam/,
+    ".d.mts",
+  );
   logger.info(`[ts-gleam] checking if declaration exists at "${_filepath}"`);
   return fs.existsSync(_filepath);
 }
@@ -27,9 +42,10 @@ function getDtsSnapshot(
   fileName: string,
   logger: tsModule.server.Logger,
 ): tsModule.IScriptSnapshot {
-  const _filepath = fileName
-    .replace("/src/", `/build/dev/javascript/${projectName}/`)
-    .replace(/\.gleam/, ".d.mts");
+  const _filepath = replaceGleamSourceRoot(fileName, projectName).replace(
+    /\.gleam/,
+    ".d.mts",
+  );
   logger.info(`[ts-gleam] loading declaration from ${_filepath}`);
   const _file = fs.readFileSync(_filepath, { encoding: "utf-8" });
   const _dts = ts.ScriptSnapshot.fromString(_file);
@@ -131,9 +147,10 @@ function init(modules: {
           return {
             extension: ts.Extension.Dts,
             isExternalLibraryImport: false,
-            resolvedFileName: p
-              .replace("/src/", `/build/dev/javascript/${projectName}/`)
-              .replace(/\.gleam/, ".d.mts"),
+            resolvedFileName: replaceGleamSourceRoot(
+              p,
+              projectName,
+            ).replace(/\.gleam/, ".d.mts"),
           };
         }
       };
