@@ -7,10 +7,16 @@ export default defineConfig({
     target: 'es2022',
     format: ["esm", "cjs"],
 
-    bundle: true,
+    deps: {
+        neverBundle: ['vite', 'esbuild', 'postcss', 'rollup', 'magic-string', 'toml']
+    },
+    outputOptions: {
+        exports: 'named'
+    },
     dts: {
         resolve: true,
         entry: "src/index.ts",
+        skipLibCheck: true,
         compilerOptions: {
             moduleResolution: 'node'
         }

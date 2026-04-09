@@ -13,6 +13,7 @@ interface GleamConfig {
 }
 
 let gleam_config: GleamConfig | undefined = undefined;
+const GLEAM_SOURCE_DIRS = ["src", "dev", "test"] as const;
 
 export async function readDeps(BASE_PATH = `.${sep}build${sep}packages`) {
   let stat = await lstat(BASE_PATH);
@@ -47,8 +48,11 @@ export function jsPath(id: string): string {
   id = id.replace(".gleam", ".mjs");
 
   let path = relative(resolve("."), id);
-  if (path.startsWith("src")) {
-    path = path.replace(`src${sep}`, `${gleam_config?.name}${sep}`);
+  const sourceDir = GLEAM_SOURCE_DIRS.find(
+    (dir) => path === dir || path.startsWith(`${dir}${sep}`),
+  );
+  if (sourceDir) {
+    path = `${gleam_config?.name ?? sourceDir}${path.slice(sourceDir.length)}`;
   }
 
   return path;
